@@ -86,7 +86,7 @@ void setup() {
 
     delay(1000);
     while (!Serial) {
-      ; // wait for serial port to connect. Needed for native USB
+      ; // wait for serial port to connect so we can watch all prints during setup
     }
   #endif
 
