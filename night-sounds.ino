@@ -79,7 +79,7 @@ void setupSPI() {
 
   digitalWrite(SDCARD_CS_PIN, HIGH);
 
-  delay(100); // give everything time to wake up
+  delay(200); // give everything time to wake up
 
   SPI.begin();
 }
@@ -110,7 +110,9 @@ void setup() {
 }
 
 void loop() {
-  playTrack();  // TODO: right now this calls updateLights, but I think that should be changed. instead it should check if playing and if not, play the next song
-
   updateLights();
+
+  playTrack();
+
+  // TODO: optionally pause after X minutes and wait for a motion sensor (for adopt-a-porta-potty)
 }

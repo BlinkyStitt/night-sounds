@@ -24,7 +24,9 @@ void updateLights() {
   EVERY_N_MILLISECONDS(1000 / frames_per_second) {
 
     // TODO: read SD to know what pattern to use
-    circle();
+    // TODO: make lights optional. make them able to turn off after X minutes
+    //circle();
+    colorTwinkles();
 
     #ifdef DEBUG
       // debugging lights
