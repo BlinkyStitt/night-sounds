@@ -111,5 +111,6 @@ void setup() {
 
 void loop() {
   playTrack();  // TODO: right now this calls updateLights, but I think that should be changed. instead it should check if playing and if not, play the next song
-  DEBUG_PRINTLN(F("Looping..."));
+
+  updateLights();
 }

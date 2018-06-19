@@ -148,6 +148,13 @@ int music_play_count = 1;
 
 // pass play_count and current_track by reference so we can support multiple playlists
 void playTrack() {
+  printAudioSummary();
+
+  if (player_aac.isPlaying() or player_mp3.isPlaying() or player_wav.isPlaying()) {
+    // something is already playing. abort
+    return;
+  }
+
   const int track_id = current_track;
 
   // prepare the next track if we have played this one enough times
@@ -180,65 +187,20 @@ void playTrack() {
   switch (tracks[track_id].codec) {
   case (TRACK_AAC):
     DEBUG_PRINTLN(F(" (as AAC)"));
-
-    // TODO: none of my example AAC tracks are playing!
+    // TODO: AAC tracks *sometimes* fail to play
     player_aac.play(tracks[track_id].filename);
-
-    // A brief delay for the library read file info
-    FastLED.delay(5);
-
-    // Simple wait for the file to finish playing.
-    while (player_aac.isPlaying()) {
-      printAudioSummary();
-      updateLights();
-    }
     break;
   case (TRACK_MP3):
     DEBUG_PRINTLN(F(" (as MP3)"));
-
     // TODO: none of my example MP3 tracks are playing!
     player_mp3.play(tracks[track_id].filename);
-
-    // A brief delay for the library read file info
-    FastLED.delay(5);
-
-    /*
-    // TODO: retry mp3 as aac?
-    if (! player_mp3.isPlaying()) {
-      play_count--;
-      current_track--;  // TODO: this isn't saved to EEPROM, but that's okay for now
-
-      // the player isn't playing only 5ms after starting
-      // sometimes .MP3 files are actually encoded with AAC
-      tracks[track_id].codec = TRACK_AAC;
-
-      // TODO: rename the file to .AAC for next boot?
-      playTrack();
-      // TODO: this is still failing sometimes
-      return;
-    }
-    */
-
-    // Simple wait for the file to finish playing.
-    // TODO: this is exiting immediatly. try a different file and try wav
-    while (player_mp3.isPlaying()) {
-      printAudioSummary();
-      updateLights();
-    }
     break;
   case (TRACK_WAV):
     DEBUG_PRINTLN(F(" (as WAV)"));
-
     player_wav.play(tracks[track_id].filename);
-
-    // A brief delay for the library read file info
-    FastLED.delay(5);
-
-    // Simple wait for the file to finish playing.
-    while (player_wav.isPlaying()) {
-      printAudioSummary();
-      updateLights();
-    }
     break;
   }
+
+  // A brief delay for the library read file info
+  FastLED.delay(5);
 }
