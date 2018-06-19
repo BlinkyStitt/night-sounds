@@ -113,36 +113,35 @@ void loadTracks() {
 }
 
 void printAudioSummary() {
-  // print a summary of the current & maximum usage
-  DEBUG_PRINT("CPU: ");
-  DEBUG_PRINT("mp3=");
-  DEBUG_PRINT(player_mp3.processorUsage());
-  DEBUG_PRINT(",");
-  DEBUG_PRINT(player_mp3.processorUsageMax());
-  DEBUG_PRINT("  ");
-  DEBUG_PRINT("aac=");
-  DEBUG_PRINT(player_aac.processorUsage());  // TODO: this always returns 0
-  DEBUG_PRINT(",");
-  DEBUG_PRINT(player_aac.processorUsageMax()); // TODO: this always returns 0
-  DEBUG_PRINT("  ");
-  DEBUG_PRINT("wav=");
-  DEBUG_PRINT(player_wav.processorUsage());
-  DEBUG_PRINT(",");
-  DEBUG_PRINT(player_wav.processorUsageMax());
-  DEBUG_PRINT("  ");
-  DEBUG_PRINT("all=");
-  DEBUG_PRINT(AudioProcessorUsage());
-  DEBUG_PRINT(",");
-  DEBUG_PRINT(AudioProcessorUsageMax());
-  DEBUG_PRINT("    ");
-  DEBUG_PRINT("Memory: ");
-  DEBUG_PRINT(AudioMemoryUsage());
-  DEBUG_PRINT(",");
-  DEBUG_PRINT(AudioMemoryUsageMax());
-  DEBUG_PRINTLN();
-
-  // very simple timing   :-)
-  delay(1000);
+  EVERY_N_SECONDS(1) {
+    // print a summary of the current & maximum usage
+    DEBUG_PRINT("CPU: ");
+    DEBUG_PRINT("mp3=");
+    DEBUG_PRINT(player_mp3.processorUsage());
+    DEBUG_PRINT(",");
+    DEBUG_PRINT(player_mp3.processorUsageMax());
+    DEBUG_PRINT("  ");
+    DEBUG_PRINT("aac=");
+    DEBUG_PRINT(player_aac.processorUsage());  // TODO: this always returns 0
+    DEBUG_PRINT(",");
+    DEBUG_PRINT(player_aac.processorUsageMax()); // TODO: this always returns 0
+    DEBUG_PRINT("  ");
+    DEBUG_PRINT("wav=");
+    DEBUG_PRINT(player_wav.processorUsage());
+    DEBUG_PRINT(",");
+    DEBUG_PRINT(player_wav.processorUsageMax());
+    DEBUG_PRINT("  ");
+    DEBUG_PRINT("all=");
+    DEBUG_PRINT(AudioProcessorUsage());
+    DEBUG_PRINT(",");
+    DEBUG_PRINT(AudioProcessorUsageMax());
+    DEBUG_PRINT("    ");
+    DEBUG_PRINT("Memory: ");
+    DEBUG_PRINT(AudioMemoryUsage());
+    DEBUG_PRINT(",");
+    DEBUG_PRINT(AudioMemoryUsageMax());
+    DEBUG_PRINTLN();
+  }
 }
 
 int music_play_count = 1;
@@ -186,12 +185,13 @@ void playTrack() {
     player_aac.play(tracks[track_id].filename);
 
     // A brief delay for the library read file info
-    delay(5);
+    FastLED.delay(5);
 
     // Simple wait for the file to finish playing.
-    while (player_aac.isPlaying())
+    while (player_aac.isPlaying()) {
       printAudioSummary();
-
+      updateLights();
+    }
     break;
   case (TRACK_MP3):
     DEBUG_PRINTLN(F(" (as MP3)"));
@@ -200,7 +200,7 @@ void playTrack() {
     player_mp3.play(tracks[track_id].filename);
 
     // A brief delay for the library read file info
-    delay(5);
+    FastLED.delay(5);
 
     /*
     // TODO: retry mp3 as aac?
@@ -221,9 +221,10 @@ void playTrack() {
 
     // Simple wait for the file to finish playing.
     // TODO: this is exiting immediatly. try a different file and try wav
-    while (player_mp3.isPlaying())
+    while (player_mp3.isPlaying()) {
       printAudioSummary();
-
+      updateLights();
+    }
     break;
   case (TRACK_WAV):
     DEBUG_PRINTLN(F(" (as WAV)"));
@@ -231,12 +232,13 @@ void playTrack() {
     player_wav.play(tracks[track_id].filename);
 
     // A brief delay for the library read file info
-    delay(5);
+    FastLED.delay(5);
 
     // Simple wait for the file to finish playing.
-    while (player_wav.isPlaying())
+    while (player_wav.isPlaying()) {
       printAudioSummary();
-
+      updateLights();
+    }
     break;
   }
 }

@@ -8,14 +8,21 @@
 #include <SD.h>
 #include <SPI.h>
 #include <Wire.h>
+#include <FastLED.h>
+#include <IniFile.h>
 
 #include <play_sd_aac.h>
 #include <play_sd_mp3.h>
 
-#define SDCARD_CS_PIN 10
+#define LED_DATA_PIN 0  // green // TODO: what pin. i want to share with the SD card
+#define LED_CLOCK_PIN 1 // blue // TODO: what pin. i want to share with the SD card
 #define SPI_MOSI_PIN 7  // Audio shield has MOSI on pin 7
+#define SDCARD_CS_PIN 10
 #define SPI_SCK_PIN 14  // Audio shield has SCK on pin 14
 #define VOLUME_KNOB A2 // TODO: not attached!
+
+#define LED_CHIPSET APA102
+#define LED_MODE BGR
 
 #define MAX_TRACKS 255
 
@@ -40,6 +47,16 @@ AudioConnection          patchCord9(mixer_mono, 0, output_mono, 0);
 AudioConnection          patchCord10(mixer_mono, 0, output_mono, 1);
 AudioControlSGTL5000     audioShield;    //xy=147,123
 // Audio GUI - https://www.pjrc.com/teensy/gui/: end automatically generated code
+
+// lights for compass ring
+const int num_LEDs = 16;
+CRGB leds[num_LEDs];
+
+int frames_per_second = 30;  // TODO: read from SD
+int default_brightness = 60;  // TODO: read from SD
+
+// rotating "base color" used by some patterns
+uint8_t g_hue = 0;
 
 enum TrackCodec: byte {
   TRACK_AAC, TRACK_MP3, TRACK_WAV
@@ -67,19 +84,6 @@ void setupSPI() {
   SPI.begin();
 }
 
-void setupSD() {
-  // Wait for a SD card
-  while (1) {
-    if (SD.begin(SDCARD_CS_PIN)) {
-      DEBUG_PRINTLN(F("SD card detected!"));
-      break;
-    }
-
-    DEBUG_PRINTLN(F("Unable to access the SD card"));
-    delay(1000);
-  }
-}
-
 void setup() {
   #ifdef DEBUG
     Serial.begin(115200);
@@ -98,13 +102,14 @@ void setup() {
 
   setupSD();
 
+  setupLights();
+
   loadTracks();
 
   DEBUG_PRINTLN(F("Starting..."));
 }
 
 void loop() {
-  playTrack();
-
+  playTrack();  // TODO: right now this calls updateLights, but I think that should be changed. instead it should check if playing and if not, play the next song
   DEBUG_PRINTLN(F("Looping..."));
 }
