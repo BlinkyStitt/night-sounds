@@ -68,9 +68,7 @@ void setupSPI() {
 }
 
 void setupSD() {
-  // Start SD card
-
-  // TODO: change this to check the sd card in a loop instead of error in a loop
+  // Wait for a SD card
   while (1) {
     if (SD.begin(SDCARD_CS_PIN)) {
       DEBUG_PRINTLN("SD card detected!");
