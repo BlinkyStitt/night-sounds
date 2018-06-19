@@ -71,11 +71,11 @@ void setupSD() {
   // Wait for a SD card
   while (1) {
     if (SD.begin(SDCARD_CS_PIN)) {
-      DEBUG_PRINTLN("SD card detected!");
+      DEBUG_PRINTLN(F("SD card detected!"));
       break;
     }
 
-    DEBUG_PRINTLN("Unable to access the SD card");
+    DEBUG_PRINTLN(F("Unable to access the SD card"));
     delay(1000);
   }
 }
@@ -90,7 +90,7 @@ void setup() {
     }
   #endif
 
-  DEBUG_PRINTLN("Setting up...");
+  DEBUG_PRINTLN(F("Setting up..."));
 
   setupSPI();
 
@@ -100,7 +100,7 @@ void setup() {
 
   loadTracks();
 
-  DEBUG_PRINTLN("Starting...");
+  DEBUG_PRINTLN(F("Starting..."));
 }
 
 void loop() {

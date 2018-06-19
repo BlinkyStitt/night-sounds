@@ -1,3 +1,8 @@
-The on switch should turn off after 1-2 hours.
+The on switch should turn off after a configurable amount of time
 
-For adopt-a-potty https://learn.adafruit.com/pir-passive-infrared-proximity-motion-sensor/using-a-pir-w-arduino
+Motion sensor as an on switch for adopt-a-porta-potty: https://learn.adafruit.com/pir-passive-infrared-proximity-motion-sensor/using-a-pir-w-arduino
+
+Options for lights:
+ - on while audio is playing
+ - on for a configurable amount of time
+ - off
